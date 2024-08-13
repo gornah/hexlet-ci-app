@@ -7,8 +7,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@master
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/node@master
+        env:
+            SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+            args: --severity-threshold=high
       - uses: actions/setup-node@v3
+        with: 
+            node-version: '16.x'
+            cache: 'npm'
       - run: make setup
       - run: make lint
       - run: make test
